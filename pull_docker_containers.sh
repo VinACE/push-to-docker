@@ -17,6 +17,7 @@ if ! type "docker" > /dev/null; then
     sudo systemctl enable docker.service
     sudo systemctl start docker.service
     sudo yum install -y docker-compose
+    sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 fi
 echo "[Docker] Logging in"
 # Note: use sh -c since bash interprets it wrong and will fail to login
