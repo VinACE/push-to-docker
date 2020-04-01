@@ -28,10 +28,11 @@ sudo docker pull "$CONTAINER_REGISTRY_NAME.azurecr.io/$DOCKER_IMAGE_JOBMANAGER"
 echo "[AZ-ACR] Pulling TASKMANAGER container"
 sudo docker pull "$CONTAINER_REGISTRY_NAME.azurecr.io/$DOCKER_IMAGE_TASKMANAGER"
 echo "Making the Docker compose/containers up"
-sudo docker-compose up 
+sudo docker-compose up -d
 echo "Get the JOBMANAGER_Container id"
 JOBMANAGER_CONTAINER=$(sudo docker ps --filter name=jobmanager --format={{.ID}})
 
+echo "the container id is : $JOBMANAGER_CONTAINER"
 echo "Copy the streaming Job to the flink jobmanager container"
 sudo docker cp ./mvn-flinkstreaming-scala-1.0.jar "$JOBMANAGER_CONTAINER":/job.jar
 
