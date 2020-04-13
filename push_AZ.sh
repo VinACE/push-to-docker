@@ -13,10 +13,14 @@ if ! type "docker" > /dev/null; then
     sudo yum install -y yum-utils device-mapper-persistent-data lvm2
     
     sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
     sudo yum install -y docker-ce
     sudo systemctl enable docker.service
     sudo systemctl start docker.service
-    sudo yum install -y docker-compose
+    sudo curl -L "https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    # sudo yum install -y docker-compose
+    sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+    sudo chmod +x /usr/local/bin/docker-compose
 fi
 echo "[Docker] Logging in"
 # Note: use sh -c since bash interprets it wrong and will fail to login
