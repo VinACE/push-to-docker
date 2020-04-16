@@ -19,7 +19,7 @@ if ! type "docker" > /dev/null; then
     echo "[Docker] Docker not installed, installing..."
     # TODO need to add sudo if not performing with root user.
     sudo yum install -y yum-utils device-mapper-persistent-data lvm2
-   
+    sudo yum install -y containerd.io docker-ce-cli containerd.io
     sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
     sudo yum install -y docker-ce
     sudo systemctl enable docker.service
@@ -30,6 +30,7 @@ if ! type "docker" > /dev/null; then
     sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 fi
 
+#TODO Need to check whether there need to reassign the shell for docker commands to pick..
 echo "[Docker] Logging in"
 # Note: use sh -c since bash interprets it wrong and will fail to login
 # sudo docker login -u $CONTAINER_REGISTRY_NAME -p $ACR_PASSWORD $CONTAINER_REGISTRY_NAME.azurecr.io
@@ -49,13 +50,45 @@ else
     echo -e "kafka-mongo-sync-docker-compose.yml file not found"
     exit 2
 fi
-echo Updating yml file for source ip
-
-sed -i "s/SOURCE_KAFKA_IPADDRESS/${ip4}/" $COMPOSE_FILE_NAME
 
  # TODO replace the subnet last digits with 192.
 
 
+# identify the subnet of the network...
+
+default_if=$(ip route list | awk '/^default/ {print $5}')
+network_subnet=$(ip -o -f inet addr show $default_if | awk '{print $4}')
+
+echo -e "Network subnet is :$network_subnet"
+
+str=$network_subnet
+newstr=$(awk -F"." '{print $1"."$2"."$3".192/26"}'<<<$str)
+
+new_subnet=$newstr
+
+echo "new subnet is $new_subnet"
+
+newstr1=$(awk -F"." '{print $1"."$2"."$3".194"}'<<<$str)
+kafka_ip=$newstr1
+
+echo "new ip fo Kafka is $kafka_ip"
+
+# TODO check the IP address are already used in the network...***********
+
+        echo -e "Updating yml file for  ip and subnet "
+
+        
+        sed -i "s/KAFKA_SUBNET/${new_subnet}/" $COMPOSE_FILE_NAME
+        sed -i "s/KAFKA_IPADDRESS/${kafka_ip}/" $COMPOSE_FILE_NAME
+
+
+
+# ZIF_ADAPTER_KAFKA_CONTAINER=$(sudo docker ps --filter name=$ADAPTER_KAFKA_CNAME --format={{.ID}})
+
 # TODO
 
+
 echo -e "End of script file ####################"
+
+# TODO check the IP address are already used in the network...***********
+
