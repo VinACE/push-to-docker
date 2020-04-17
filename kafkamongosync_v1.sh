@@ -81,9 +81,30 @@ echo "new ip fo Kafka is $kafka_ip"
         sed -i "s~KAFKA_IPADDRESS~${kafka_ip}~" $COMPOSE_FILE_NAME
 
 
-echo Starting adapter containers to be running.
+echo Starting kafka containers to be running.
 
-sudo docker-compose --file $COMPOSE_FILE_NAME up -d
+
+$(docker-compose --file $COMPOSE_FILE_NAME up -d)
+sleep 30
+KAFKA_CNAME=kafka_mongo_sync
+
+KAFKA_CONTAINER=$(docker ps --filter name=$KAFKA_CNAME --format={{.ID}})
+
+$(docker exec  -it -d "$KAFKA_CONTAINER" /bin/bash  -c "/opt/kafka/update_config.sh $ip4")
+
+
+
+echo $KAFKA_CONTAINER
+# $(cd /opt/kafka/config/)
+# echo "$(pwd)"
+# connect_mongo_sink_file=connect-mongo-sink.properties
+
+
+
+
+
+
+
 
 		
 
@@ -96,4 +117,9 @@ sudo docker-compose --file $COMPOSE_FILE_NAME up -d
 echo -e "End of script file ####################"
 
 # TODO check the IP address are already used in the network...***********
+
+
+# TODO to stop command for the container...
+
+
 
