@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #---------------------------------------------------------------#
 #It is deployment script for custmomer where user runs this file#
 #---------------------------------------------------------------#
@@ -6,7 +6,7 @@
 ## reference
 # https://stackoverflow.com/questions/39493490/provide-static-ip-to-docker-containers-via-docker-compose
 # deployAdapter.sh <zifcoreip:zifcorebroker port no>
-# required for  docker reqistry login.. 
+# required for  docker reqistry login..
 # TODO this can be done as one time...
 CONTAINER_REGISTRY_NAME=zif4test
 ACR_PASSWORD=0jgrcPhzCrhYT3yCf4/s67xzKn1WJxA8
@@ -25,8 +25,8 @@ if ! type "docker" > /dev/null; then
     sudo systemctl enable docker.service
     sudo systemctl start docker.service
     #sudo yum install -y docker-compose
-	sudo curl -L "https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-	sudo chmod +x /usr/local/bin/docker-compose
+        sudo curl -L "https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+        sudo chmod +x /usr/local/bin/docker-compose
     sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 fi
 
@@ -42,7 +42,7 @@ echo "IP address of the machine is : $ip4"
 
 
  # TODO replace entries in the config files using SED operators
- 
+
 #TODO check yml file exists in the current directory to proceed
 if [ -f kafka-mongo-sync-docker-compose.yml ]; then
 COMPOSE_FILE_NAME=kafka-mongo-sync-docker-compose.yml
@@ -90,7 +90,7 @@ KAFKA_CNAME=kafka_mongo_sync
 
 KAFKA_CONTAINER=$(docker ps --filter name=$KAFKA_CNAME --format={{.ID}})
 
-$(docker exec  -it -d "$KAFKA_CONTAINER" /bin/bash  -c "/opt/kafka/update_config.sh $ip4")
+$(docker exec  -it -d "$KAFKA_CONTAINER" /bin/sh  -c "/opt/kafka/update_config.sh $ip4 > /tmp/test.out")
 
 
 
@@ -106,7 +106,7 @@ echo $KAFKA_CONTAINER
 
 
 
-		
+
 
 
 # ZIF_ADAPTER_KAFKA_CONTAINER=$(sudo docker ps --filter name=$ADAPTER_KAFKA_CNAME --format={{.ID}})
@@ -120,6 +120,7 @@ echo -e "End of script file ####################"
 
 
 # TODO to stop command for the container...
+
 
 
 
