@@ -1,3 +1,4 @@
+
 #!/bin/sh
 
 ### this file will be pushed along with the image
@@ -49,15 +50,23 @@ KAFKA_MONGO_ERR_FILE=/opt/kafka/kafka-mongo-error.err
 cd $KAFKA_HOME
 echo $(pwd)
 
-ex=' sh ./bin/connect-standalone.sh /opt/kafka/config/connect-standalone-mongo.properties  /opt/kafka/config/connect-mongo-sink.properties > /opt/kafka/kafka-mongo-info.out 2> /opt/kafka/kafka-mongo-error.err & '
+ex=' /opt/kafka/bin/connect-standalone.sh /opt/kafka/config/connect-standalone-mongo.properties  /opt/kafka/config/connect-mongo-sink.properties > /opt/kafka/kafka-mongo-info.out 2> /opt/kafka/kafka-mongo-error.err &'
 
-nohup $ex &
+while true
+  do
+
+    nohup $ex 1>nohup_kms.out 2> nohup_kms.err | tee -a /var/log/my_uber_script.log
+
+  done
+
 # nohup sh /opt/kafka/run_sync.sh \&
 
 # declare -a parameters=("/opt/kafka/config/connect-standalone-mongo.properties" "/opt/kafka/config/connect-mongo-sink.properties" )
 # for parameter in "${parameters[@]}"
+# while true
 # do
 
 #    $(nohup  sh $KAFKA_HOME/bin/connect-standalone.sh  "/opt/kafka/config/connect-standalone-mongo.properties" "/opt/kafka/config/connect-mongo-sink.properties"  1> $KAFKA_MONGO_OUT_FILE 2>&1 &)
 # done
+
 
