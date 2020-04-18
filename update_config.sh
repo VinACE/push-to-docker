@@ -1,4 +1,3 @@
-
 #!/bin/sh
 
 ### this file will be pushed along with the image
@@ -55,7 +54,8 @@ ex=' /opt/kafka/bin/connect-standalone.sh /opt/kafka/config/connect-standalone-m
 while true
   do
 
-    nohup $ex 1>nohup_kms.out 2> nohup_kms.err | tee -a /var/log/my_uber_script.log
+    # nohup $ex 1>nohup_kms.out 2> nohup_kms.err | tee -a /var/log/my_uber_script.log
+    nohup $ex 1>nohup_kms.out 2> nohup_kms.err
 
   done
 

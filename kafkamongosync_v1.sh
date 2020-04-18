@@ -122,5 +122,3 @@ echo -e "End of script file ####################"
 # TODO to stop command for the container...
 
 
-
-
