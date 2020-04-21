@@ -68,7 +68,11 @@ new_subnet=$newstr
 
 echo "new subnet is $new_subnet"
 
-newstr1=$(awk -F"." '{print $1"."$2"."$3".194"}'<<<$str)
+
+# TODO Need to fix the below line to take the default IP or to overide after obtaining the new IP
+# TODO try to rewrite again the new IP into configurations...
+# TODO check for the correct assignment of IP address.
+newstr1=$(awk -F"." '{print $1"."$2"."$3".195"}'<<<$str)
 kafka_ip=$newstr1
 
 echo "new ip fo Kafka is $kafka_ip"

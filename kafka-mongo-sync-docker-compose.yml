@@ -1,0 +1,41 @@
+version: '3'
+networks:
+  vpcbr:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 172.18.0.192/26
+services:
+  zookeeper:
+    image: zif4test.azurecr.io/zookeeper
+    container_name: sync_zookeeper
+    ports:
+      - "2181:2181"
+    networks:
+     vpcbr:
+      ipv4_address: 172.18.0.195
+  kafka:
+    image: zif4test.azurecr.io/kafka_mongo_sync
+    container_name: kafka_mongo_sync
+    ports:
+      - "9092:9092"
+    expose:
+      - "9092"
+
+    networks:
+     vpcbr:
+      ipv4_address: 172.18.0.194
+
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: 172.18.0.194
+      KAFKA_ADVERTISED_PORT: "9092"
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      GROUP_ID: 1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/:/var/run/
+
+
+
+
+
